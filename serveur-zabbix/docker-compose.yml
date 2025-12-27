@@ -1,0 +1,33 @@
+version: '3.5'
+services:
+  zabbix-db:
+    image: mysql:8.0
+    command: --character-set-server=utf8 --collation-server=utf8_bin --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./zbx_db_data:/var/lib/mysql
+    env_file:
+      - .env_db_mysql
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:ubuntu-6.4-latest
+    ports:
+      - "10051:10051"
+    volumes:
+      - ./zbx_snmptraps:/var/lib/zabbix/snmptraps
+    env_file:
+      - .env_db_mysql
+      - .env_srv
+    depends_on:
+      - zabbix-db
+
+  zabbix-web:
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-6.4-latest
+    ports:
+      - "80:8080"
+      - "443:8443"
+    env_file:
+      - .env_db_mysql
+      - .env_web
+    depends_on:
+      - zabbix-db
+      - zabbix-server
