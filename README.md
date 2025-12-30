@@ -16,6 +16,8 @@ Ce projet vise la mise en œuvre d'une **infrastructure de supervision centralis
 
 La solution technique repose sur la conteneurisation du serveur **Zabbix** via **Docker**, garantissant portabilité, isolation et facilité de déploiement.
 
+📽️ [Voir la présentation sur Youtube](https://img.youtube.com/vi/oBkdGzMjU5s.jpg)
+
 ## 🏗️ Architecture
 
 L'infrastructure est déployée dans un VPC AWS avec la topologie suivante :
