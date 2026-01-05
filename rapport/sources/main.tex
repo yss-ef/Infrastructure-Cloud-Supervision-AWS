@@ -1,0 +1,568 @@
+\documentclass[a4paper,12pt]{article}
+
+% ==========================================
+% 1. PACKAGES FONDAMENTAUX & ENCODAGE
+% ==========================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\usepackage{parskip} % Espacement propre entre paragraphes
+
+% ==========================================
+% 2. TYPOGRAPHIE & COULEURS (MONOCHROME PRO)
+% ==========================================
+% --- Polices ---
+\usepackage{mathpazo}       % Palatino pour le texte principal (Serif - très lisible)
+\usepackage[scaled]{helvet} % Helvetica pour les titres (Sans-Serif - moderne)
+\usepackage{courier}        % Courier pour le code
+
+% --- Couleurs (Nuances de Gris) ---
+\usepackage[table]{xcolor}
+\definecolor{DeepGrey}{RGB}{40, 40, 40}     % Gris Anthracite pour titres (plus doux que le noir pur)
+\definecolor{LightGrey}{RGB}{245, 245, 245} % Gris très pâle pour fond de code
+\definecolor{CommentGrey}{RGB}{100, 100, 100} % Gris moyen pour commentaires
+
+% --- Stylisation des Titres ---
+\usepackage{sectsty}
+\sectionfont{\color{DeepGrey}\sffamily\bfseries}    % Titres en Gris Foncé et Sans-Serif
+\subsectionfont{\color{DeepGrey}\sffamily\bfseries} % Sous-titres en Gris Foncé
+
+% ==========================================
+% 3. GRAPHIQUES & TABLEAUX
+% ==========================================
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{fontawesome5} % Icônes GitHub
+
+% --- Stylisation des Légendes ---
+\usepackage{caption}
+\captionsetup{
+    labelfont={bf,color=black}, % "Figure 1" en Gras Noir
+    textfont={it},              % Texte de la légende en italique
+    font=small
+}
+
+% ==========================================
+% 4. CODE & LISTINGS (STYLE ÉPURÉ)
+% ==========================================
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{LightGrey},   
+    commentstyle=\color{CommentGrey}\itshape, % Commentaires en gris italique
+    keywordstyle=\color{black}\bfseries,      % Mots-clés en Gras Noir
+    numberstyle=\tiny\color{gray},            % Numéros de ligne discrets
+    stringstyle=\color{DeepGrey},             % Chaînes de caractères en gris foncé
+    basicstyle=\ttfamily\footnotesize,        % Police machine à écrire
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=8pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=lines,                     % Cadre simple (lignes haut/bas)
+    rulecolor=\color{black},         % Lignes noires
+    framerule=0.8pt
+}
+\lstset{style=mystyle}
+\renewcommand{\lstlistlistingname}{Liste des codes sources}
+
+% ==========================================
+% 5. LIENS & NAVIGATION (DISCRET)
+% ==========================================
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,     % Liens internes en Noir (invisible à l'impression)
+    filecolor=black,      
+    urlcolor=black,      % URL en Noir (propre)
+    citecolor=black,
+    pdftitle={Rapport Projet - Supervision Centralisée AWS Zabbix},
+    pdfauthor={Fellah Youssef},
+}
+
+% ==========================================
+% 6. EN-TÊTES & PIEDS DE PAGE
+% ==========================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{DeepGrey} Université Mundiapolis}
+\fancyhead[R]{\sffamily\small\color{DeepGrey} Génie Informatique}
+\fancyfoot[L]{\sffamily\small\color{DeepGrey} Fellah Youssef}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- LISTES À PUCES ---
+\usepackage{enumitem}
+\setlist[itemize]{label=\textbullet, leftmargin=*} % Puces standard noires
+
+% --- INFO DOCUMENT ---
+\newcommand{\titreProjet}{Mise en œuvre d'une infrastructure cloud de supervision centralisée sous AWS}
+\newcommand{\sousTitre}{Déploiement de Zabbix conteneurisé pour le monitoring d'un parc hybride (Linux \& Windows)}
+
+
+\begin{document}
+
+% ==========================================
+% PAGE DE GARDE
+% ==========================================
+\begin{titlepage}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushleft}
+            \textbf{UNIVERSITÉ MUNDIAPOLIS}\\
+            \textit{École d'Ingénieurs}\\
+            \textit{Casablanca}
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushright}
+            \textbf{2\textsuperscript{ème} Année CI}\\
+            \textit{Génie Informatique}\\
+            \textit{Filière : Informatique} 
+        \end{flushright}
+    \end{minipage}
+
+    \vspace{2.5cm}
+    
+    % Logo (Commenter si absent)
+    \includegraphics[width=0.5\linewidth]{logo_uni.png} 
+    
+    \vspace{2.0cm}
+    
+    \rule{\linewidth}{1pt} \\[0.4cm] % Trait noir élégant
+    {\huge \bfseries \titreProjet}\\[0.4cm] 
+    {\large \sousTitre}\\[0.4cm]
+    \rule{\linewidth}{1pt} \\[1.5cm]
+    
+    \vfill
+    
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushleft} \large
+            \textbf{Réalisé par :}\\
+            \textsc{Fellah} Youssef 
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushright} \large
+            \textbf{Encadré par :}\\
+            Prof. \textsc{Khiat} Azeddine 
+        \end{flushright}
+    \end{minipage}
+
+    \vfill
+    
+    {\large Année universitaire : 2025/2026}
+    \vspace{1cm}
+\end{titlepage}
+
+% ==========================================
+% REMERCIEMENTS
+% ==========================================
+\section*{Remerciements}
+Je tiens tout d'abord à remercier mon encadrant, M. \textbf{Azeddine KHIAT}, pour ses directives claires et son accompagnement pédagogique tout au long de ce module de Cloud Computing.
+
+Ce projet m'a permis de consolider mes compétences en administration système et en architecture cloud, en mettant en pratique les concepts théoriques abordés en cours, notamment sur les services AWS (EC2, VPC) et la conteneurisation.
+
+\vspace{1.5cm}
+% ==========================================
+% AVANT-PROPOS
+% ==========================================
+\section*{Avant-propos}
+
+La supervision des infrastructures informatiques est devenue une composante indispensable de la stratégie opérationnelle des entreprises modernes. Avec la migration croissante vers le Cloud, la capacité à surveiller en temps réel la disponibilité et la performance des services est un enjeu critique pour garantir la continuité d'activité.
+
+Ce projet, réalisé dans le cadre du module de \textbf{Cloud Computing}, a pour vocation de simuler un environnement de production réel hébergé sur Amazon Web Services (AWS). Il ne s'agit pas uniquement de déployer des instances, mais de construire une architecture résiliente et surveillée, capable d'alerter les administrateurs au moindre incident.
+
+Le choix de la solution \textbf{Zabbix}, couplée à la technologie de conteneurisation \textbf{Docker}, répond à un besoin d'agilité et de standardisation, compétences clés pour un futur ingénieur en informatique. Ce rapport retrace ainsi la démarche technique adoptée, depuis la conception de l'architecture réseau jusqu'à l'analyse des métriques de performance.
+
+\newpage
+% --- TABLES ET LISTES ---
+\tableofcontents
+\newpage
+\listoffigures
+\vspace{1.5cm}
+\lstlistoflistings
+\newpage
+
+% ==========================================
+% 1. INTRODUCTION
+% ==========================================
+\section{Introduction}
+Ce projet s'inscrit dans le cadre du module de \textbf{Cloud Computing} et vise la mise en œuvre d'une infrastructure de supervision centralisée hébergée sur le cloud Amazon Web Services (AWS). L'objectif est de déployer une solution de monitoring pour un parc hybride (Linux et Windows).
+
+\subsection{Outils et Technologies}
+\begin{itemize}
+    \item \textbf{AWS :} Infrastructure (EC2, VPC, Security Groups).
+    \item \textbf{Docker :} Conteneurisation du serveur Zabbix.
+    \item \textbf{Zabbix :} Solution de monitoring open-source.
+\end{itemize}
+
+\subsection{Ressources du Projet (GitHub)}
+\begin{center}
+    \fbox{ % Cadre simple noir
+        \begin{minipage}{\textwidth}
+            \centering
+            \vspace{0.2cm}
+            \textbf{\Large \faGithub \ Dépôt GitHub} \vspace{0.2cm} \\
+            Le code source et la documentation sont disponibles ici : \\
+            \url{https://github.com/yss-ef/Infrastructure-Cloud-Supervision-AWS} 
+            \vspace{0.2cm}
+        \end{minipage}
+    }
+\end{center}
+\vspace{0.5cm}
+
+% ==========================================
+% 2. ARCHITECTURE RÉSEAU
+% ==========================================
+\section{Architecture Réseau}
+L'infrastructure réseau repose sur un VPC personnalisé avec un sous-réseau public.
+
+\subsection{Création du VPC}
+Le VPC \texttt{Fellah-Youssef-VPC-Projet-Zabbix} a été créé avec le bloc CIDR \texttt{10.0.0.0/16}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 191315.png}
+    \caption{Aperçu de la topologie du VPC}
+    \label{fig:vpc_map}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 191550.png}
+    \caption{Validation de la création des ressources VPC}
+    \label{fig:vpc_success}
+\end{figure}
+
+\subsection{Groupes de Sécurité}
+Le Security Group autorise les flux nécessaires au monitoring (Ports 10050, 10051) et à l'administration (22, 3389).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 192116.png}
+    \caption{Configuration des règles entrantes (Inbound Rules)}
+    \label{fig:sg_rules}
+\end{figure}
+
+% ==========================================
+% 3. ARCHITECTURE DES INSTANCES EC2
+% ==========================================
+\section{Architecture des Instances EC2}
+Trois instances ont été déployées pour simuler l'environnement de production.
+
+\begin{itemize}
+    \item \textbf{Serveur Zabbix :} Ubuntu 22.04, t2.medium (4Go RAM).
+    \item \textbf{Client Linux :} Ubuntu 22.04, t3.micro.
+    \item \textbf{Client Windows :} Windows Server 2022, t3.medium.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Screenshot 2025-12-27 193338.png}
+    \caption{Instances EC2 en cours d'exécution (Running)}
+    \label{fig:ec2_instances}
+\end{figure}
+
+% ==========================================
+% 4. DÉPLOIEMENT DU SERVEUR ZABBIX
+% ==========================================
+\section{Déploiement du Serveur Zabbix}
+
+Le déploiement du serveur de supervision a été réalisé de manière conteneurisée sur l'instance Ubuntu dédiée.
+
+\subsection{Installation de Docker}
+Nous avons d'abord préparé l'environnement en installant les paquets nécessaires et en configurant les droits utilisateurs.
+
+\begin{lstlisting}[language=bash, caption=Installation des dépendances Docker]
+# 1. Mise à jour du système
+sudo apt update && sudo apt upgrade -y
+
+# 2. Installation de Docker et Docker Compose
+sudo apt install docker.io -y
+sudo apt install docker-compose -y
+
+# 3. Démarrage et activation du service Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 4. Ajout de l'utilisateur actuel au groupe docker
+sudo usermod -aG docker $USER
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 194941.png}
+    \caption{Installation des paquets Docker sur le terminal}
+    \label{fig:docker_install}
+\end{figure}
+
+\subsection{Configuration de l'Orchestrateur}
+Nous avons créé l'arborescence du projet dans le dossier \texttt{zabbix-docker}.
+
+\begin{lstlisting}[language=bash, caption=Création du répertoire de travail]
+mkdir zabbix-docker && cd zabbix-docker
+nano docker-compose.yml
+\end{lstlisting}
+
+Le fichier \texttt{docker-compose.yml} a été configuré pour utiliser des fichiers d'environnement externes (\texttt{.env\_db\_mysql}, etc.) afin de sécuriser les identifiants.
+
+\begin{lstlisting}[language=yaml, caption=Extrait du fichier docker-compose.yml]
+version: '3.5'
+services:
+  zabbix-db:
+    image: mysql:8.0
+    command: --character-set-server=utf8 --collation-server=utf8_bin --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./zbx_db_data:/var/lib/mysql
+    env_file:
+      - .env_db_mysql
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:ubuntu-6.4-latest
+    ports:
+      - "10051:10051"
+    env_file:
+      - .env_db_mysql
+      - .env_srv
+    depends_on:
+      - zabbix-db
+
+  zabbix-web:
+    image: zabbix/zabbix-web-apache-mysql:ubuntu-6.4-latest
+    ports:
+      - "80:8080"
+      - "443:8443"
+    env_file:
+      - .env_db_mysql
+      - .env_web
+    depends_on:
+      - zabbix-server
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 195640.png}
+    \caption{Configuration du fichier docker-compose.yml}
+    \label{fig:docker_compose}
+\end{figure}
+
+\subsection{Lancement et Validation}
+Le service est démarré en mode détaché.
+
+\begin{lstlisting}[language=bash, caption=Lancement de la stack Zabbix]
+docker-compose up -d
+\end{lstlisting}
+
+La vérification de l'état des conteneurs confirme que le déploiement est un succès :
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 195830.png}
+    \caption{Validation des conteneurs actifs via docker ps}
+    \label{fig:docker_ps}
+\end{figure}
+
+\subsection{Accès à l'Interface Web}
+L'interface est accessible via l'adresse IP publique de l'instance.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Screenshot 2025-12-27 200016.png}
+    \caption{Page de connexion Zabbix}
+    \label{fig:zabbix_login}
+\end{figure}
+
+% ==========================================
+% 5. CONFIGURATION DES CLIENTS (AGENTS)
+% ==========================================
+\section{Configuration des Clients (Agents)}
+
+Pour permettre la remontée des métriques vers le serveur central, l'agent Zabbix doit être installé et configuré sur chaque machine cible.
+
+\subsection{Client Linux (Ubuntu)}
+Sur l'instance \texttt{Client-Linux}, nous avons procédé à l'installation manuelle de l'agent en utilisant le dépôt officiel Zabbix pour garantir la compatibilité avec la version 6.4 du serveur.
+
+\subsubsection{Installation des paquets}
+Les commandes suivantes ont été exécutées pour ajouter le dépôt et installer l'agent :
+
+\begin{lstlisting}[language=bash, caption=Script d'installation de l'agent Zabbix sur Ubuntu]
+# 1. Récupération et installation du dépôt officiel
+wget https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest+ubuntu24.04_all.deb
+sudo dpkg -i zabbix-release_latest+ubuntu24.04_all.deb
+sudo apt update
+
+# 2. Installation du paquet de l'agent
+sudo apt install zabbix-agent -y
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 200536.png}
+    \caption{Installation réussie du paquet zabbix-agent via apt}
+    \label{fig:linux_install}
+\end{figure}
+
+\subsubsection{Configuration de l'Agent}
+L'étape critique consiste à modifier le fichier \texttt{/etc/zabbix/zabbix\_agentd.conf} pour autoriser le serveur de supervision à communiquer avec cet agent.
+
+Nous avons édité les paramètres suivants :
+\begin{itemize}
+    \item \textbf{Server=10.0.13.208} : Adresse IP privée de notre serveur Zabbix (autorisé à faire du polling).
+    \item \textbf{ServerActive=10.0.13.208} : Adresse IP pour les vérifications actives.
+    \item \textbf{Hostname=Client-Linux} : Nom unique identifiant la machine.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 201316.png}
+    \caption{Configuration du Hostname et de l'IP du serveur dans zabbix\_agentd.conf}
+    \label{fig:linux_conf}
+\end{figure}
+
+Une fois la configuration sauvegardée, le service a été redémarré et activé au démarrage :
+
+\begin{lstlisting}[language=bash]
+sudo systemctl restart zabbix-agent
+sudo systemctl enable zabbix-agent
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 200919.png}
+    \caption{Redémarrage du service pour appliquer la configuration}
+    \label{fig:linux_service}
+\end{figure}
+
+\subsubsection{Déclaration de l'hôte dans Zabbix}
+Enfin, pour finaliser l'appairage, nous avons ajouté l'hôte dans l'interface Web de Zabbix (\textit{Configuration > Hosts > Create host}) en veillant à ce que le "Host name" corresponde exactement à celui défini dans le fichier de configuration (\texttt{Client-Linux}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 201702.png}
+    \caption{Ajout de l'hôte Linux dans l'interface de gestion Zabbix}
+    \label{fig:linux_web_add}
+\end{figure}
+
+\subsection{Client Windows (Windows Server 2022)}
+Pour le client Windows, la procédure diffère légèrement, s'appuyant sur une interface graphique via une connexion Bureau à Distance (RDP).
+
+\subsubsection{Accès à l'instance}
+Nous nous sommes connectés à l'instance \texttt{Fellah-Youssef-Client-Windows} en utilisant le client RDP et les identifiants administrateur déchiffrés via la clé privée AWS.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Screenshot 2025-12-27 203242.png}
+    \caption{Connexion RDP à l'instance Windows Server}
+    \label{fig:windows_rdp}
+\end{figure}
+
+\subsubsection{Installation et Configuration de l'Agent}
+Depuis le navigateur de la VM, nous avons téléchargé l'installeur MSI officiel de l'agent Zabbix (version 7.4 LTS, compatible avec notre serveur).
+
+Durant l'installation, nous avons configuré les paramètres de connexion pour lier l'agent à notre serveur de supervision :
+
+\begin{itemize}
+    \item \textbf{Host name :} \texttt{Client-Windows} (Doit être identique au nom déclaré dans l'interface Web Zabbix).
+    \item \textbf{Zabbix server IP :} \texttt{10.0.13.208} (L'IP privée de notre serveur Zabbix).
+    \item \textbf{Agent listen port :} \texttt{10050} (Port par défaut).
+    \item \textbf{Add agent location to the PATH} : Coché pour faciliter le débogage en ligne de commande.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Screenshot 2025-12-27 203849.png}
+    \caption{Configuration de l'agent Zabbix via l'installeur MSI}
+    \label{fig:windows_msi_conf}
+\end{figure}
+
+L'installation MSI configure automatiquement le Pare-feu Windows (Windows Defender Firewall) pour autoriser le trafic entrant sur le port TCP 10050, rendant l'agent 
+immédiatement opérationnel.
+
+% ==========================================
+% 6. MONITORING ET TABLEAUX DE BORD
+% ==========================================
+\section{Monitoring et Tableaux de Bord}
+
+Une fois les agents installés et configurés, la dernière étape consistait à valider la remontée d'informations dans l'interface Zabbix et à visualiser les métriques.
+
+\subsection{Validation de la Connectivité (Disponibilité)}
+Nous avons ajouté nos deux clients ("Client-Linux" et "Client-Windows") dans la section \textit{Configuration > Hosts}. 
+
+Le tableau ci-dessous présente l'état final du parc. La colonne \textbf{Availability} affiche l'icône \textbf{ZBX en vert} pour l'ensemble des hôtes, confirmant que le serveur reçoit correctement les données via le port 10050.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 204333.png}
+    \caption{Vue globale des hôtes : Le statut "Vert" (ZBX) valide la communication}
+    \label{fig:hosts_status_green}
+\end{figure}
+
+\subsection{Visualisation des Données (Graphiques)}
+Zabbix collecte désormais des métriques en temps réel (CPU, RAM, Disque, Réseau). Nous avons configuré un tableau de bord pour visualiser l'occupation des systèmes de fichiers du client Linux.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Screenshot 2025-12-27 204447.png}
+    \caption{Graphiques d'utilisation des disques sur le Client Linux}
+    \label{fig:dashboard_graphs}
+\end{figure}
+
+% ==========================================
+% 7. CONCLUSION
+% ==========================================
+\section{Conclusion}
+
+Ce projet nous a permis de déployer avec succès une infrastructure de supervision centralisée sur le cloud AWS, répondant aux exigences d'un environnement hybride moderne.
+
+\subsection{Bilan Technique}
+Nous avons réussi à :
+\begin{itemize}
+    \item Mettre en œuvre une architecture réseau sécurisée (VPC, Security Groups) isolant les flux d'administration et de monitoring.
+    \item Conteneuriser une application complexe (Zabbix) via Docker pour en faciliter le déploiement.
+    \item Fédérer des systèmes hétérogènes (Ubuntu et Windows Server) au sein d'une même console de gestion.
+\end{itemize}
+
+\subsection{Difficultés Rencontrées et Solutions}
+Durant la réalisation, nous avons fait face à quelques obstacles techniques :
+
+\begin{enumerate}
+    \item \textbf{Configuration des Agents :} Une erreur de saisie lors de la déclaration de l'hôte Linux (doublon dans l'adresse IP, voir capture d'erreur lors des essais) a initialement empêché la connexion. Cela nous a appris l'importance de la validation rigoureuse des fichiers de configuration.
+    \item \textbf{Règles de Sécurité AWS :} La communication sur le port 10050 était initialement bloquée. Il a fallu modifier les \textit{Security Groups} pour autoriser explicitement le trafic TCP sur ce port spécifique entre les instances du VPC.
+\end{enumerate}
+
+En conclusion, cette architecture offre une base solide et évolutive pour la supervision d'un parc informatique d'entreprise.
+
+% ==========================================
+% WEBOGRAPHIE
+% ==========================================
+\newpage
+\section{Webographie}
+
+Pour la réalisation de ce projet, les documentations techniques suivantes ont été consultées :
+
+\begin{itemize}
+    \item \textbf{Documentation AWS officielle} (VPC, Security Groups, EC2) : \\
+    \url{https://docs.aws.amazon.com/}
+    
+    \item \textbf{Documentation Zabbix 6.4} (Installation Agents, Docker) : \\
+    \url{https://www.zabbix.com/documentation/6.4/en/manual}
+    
+    \item \textbf{Docker Hub} (Images officielles Zabbix) : \\
+    \url{https://hub.docker.com/u/zabbix}
+\end{itemize}
+
+\end{document}
